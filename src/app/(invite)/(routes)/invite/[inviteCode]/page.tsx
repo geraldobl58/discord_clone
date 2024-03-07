@@ -3,11 +3,12 @@ import { redirect } from "next/navigation";
 import { redirectToSignIn } from "@clerk/nextjs";
 
 import { currentProfile } from "@/lib/current-profile";
+
 import { db } from "@/lib/db";
 
 interface InviteCodePageProps {
   params: {
-    invideCode: string;
+    inviteCode: string;
   };
 }
 
@@ -18,13 +19,13 @@ const InviteCodePage = async ({ params }: InviteCodePageProps) => {
     return redirectToSignIn();
   }
 
-  if (!params.invideCode) {
+  if (!params.inviteCode) {
     return redirect("/");
   }
 
   const existingServer = await db.server.findFirst({
     where: {
-      inviteCode: params.invideCode,
+      inviteCode: params.inviteCode,
       members: {
         some: {
           profileId: profile.id,
@@ -39,7 +40,7 @@ const InviteCodePage = async ({ params }: InviteCodePageProps) => {
 
   const server = await db.server.update({
     where: {
-      inviteCode: params.invideCode,
+      inviteCode: params.inviteCode,
     },
     data: {
       members: {
@@ -56,11 +57,7 @@ const InviteCodePage = async ({ params }: InviteCodePageProps) => {
     return redirect(`/servers/${server.id}`);
   }
 
-  return (
-    <div>
-      <div>InviteCodePage - {params.invideCode}</div>
-    </div>
-  );
+  return null;
 };
 
 export default InviteCodePage;
