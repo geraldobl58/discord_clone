@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChevronDown,
   LogOut,
@@ -18,6 +20,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { useModal } from "@/hooks/use-modal";
+
 import { ServerWithMembersWithProfiles } from "@/types";
 
 interface ServerHeaderProps {
@@ -26,6 +30,8 @@ interface ServerHeaderProps {
 }
 
 export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
+  const { onOpen } = useModal();
+
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin || role === MemberRole.MODERATOR;
 
@@ -65,6 +71,7 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
       >
         {isModerator && (
           <DropdownMenuItem
+            onClick={() => onOpen("invite", { server })}
             className="
               text-indigo-600
               dark:text-indigo-400
