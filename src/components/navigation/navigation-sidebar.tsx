@@ -40,6 +40,7 @@ export const NavigationSidebar = async () => {
         text-primary
         w-full
         dark:bg-[#1E1F22]
+        bg-[#E3E5E8]
         py-3
       "
     >
