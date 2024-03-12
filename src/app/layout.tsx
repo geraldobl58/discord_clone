@@ -5,7 +5,9 @@ import { Open_Sans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { ThemeProvider } from "@/components/theme-provider";
+
 import { ModalProvider } from "@/providers/modal-provider";
+import { SocketProvider } from "@/providers/socket-provider";
 
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -32,8 +34,10 @@ export default function RootLayout({
             enableColorScheme={false}
             storageKey="discord-theme"
           >
-            <ModalProvider />
-            {children}
+            <SocketProvider>
+              <ModalProvider />
+              {children}
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>
