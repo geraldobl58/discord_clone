@@ -1,10 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Plus, Smile } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import qs from "query-string";
 
@@ -14,6 +16,9 @@ import * as z from "zod";
 
 import { Form, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { EmojiPicker } from "@/components/emoji-picker";
+
+import { useModal } from "@/hooks/use-modal";
 
 interface ChatInputProps {
   apiUrl: string;
@@ -27,6 +32,10 @@ const formSchema = z.object({
 });
 
 export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
+  const { onOpen } = useModal();
+
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,6 +53,9 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
       });
 
       await axios.post(url, values);
+
+      form.reset();
+      router.refresh();
     } catch (error) {
       console.log;
     }
@@ -60,7 +72,7 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
               <div className="relative p-4 pb-6">
                 <button
                   type="button"
-                  onClick={() => {}}
+                  onClick={() => onOpen("messageFile", { apiUrl, query })}
                   className="
                     absolute
                     top-7
@@ -101,7 +113,13 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                   {...field}
                 />
                 <div className="absolute top-7 right-8">
-                  <Smile />
+                  <EmojiPicker
+                    onChange={(emoji: string) =>
+                      field.onChange(`
+                      ${field.value} ${emoji}
+                    `)
+                    }
+                  />
                 </div>
               </div>
             </FormItem>
